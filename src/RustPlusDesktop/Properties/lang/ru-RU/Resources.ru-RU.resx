@@ -7851,6 +7851,9 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>Тепловые карты считываются из файла карты сервера. Найти подходящую карту и разобрать её сейчас? Это также добавит дополнительные монументы и точки интереса. 3D-карта при этом не создаётся.</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>3D-вид камеры строится на файле карты сервера. Найти подходящую карту и разобрать её сейчас? Это также добавит дополнительные монументы и точки интереса. 3D-карта при этом не создаётся.</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Разобрать</value>
   </data>

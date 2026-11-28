@@ -7602,6 +7602,9 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>热力图从服务器的地图文件中读取。现在查找并解析对应的地图吗？这同时会添加额外的纪念碑和热点。不会生成 3D 地图。</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>摄像头的 3D 视图基于服务器的地图文件。现在查找并解析对应的地图吗？这同时会添加额外的纪念碑和热点。不会生成 3D 地图。</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>立即解析</value>
   </data>

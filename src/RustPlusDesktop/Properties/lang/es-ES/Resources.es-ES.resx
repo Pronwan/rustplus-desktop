@@ -7851,6 +7851,9 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>Los mapas de calor se leen del archivo de mapa del servidor. Buscar ahora el mapa correspondiente y analizarlo? Esto tambien anade los monumentos adicionales y los puntos de interes. No se genera el mapa 3D.</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>La vista 3D de la camara se basa en el archivo de mapa del servidor. Buscar ahora el mapa correspondiente y analizarlo? Esto tambien anade los monumentos adicionales y los puntos de interes. No se genera el mapa 3D.</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Analizar ahora</value>
   </data>

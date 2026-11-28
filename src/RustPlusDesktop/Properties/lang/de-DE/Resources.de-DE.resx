@@ -3743,6 +3743,9 @@ Bitte koppeln Sie diesen Server zuerst.</value>
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>Heatmaps werden aus der Map-Datei des Servers gelesen. Jetzt die passende Map suchen und einlesen? Damit kommen auch die zusätzlichen Monumente und Hot-Spots dazu. Die 3D-Karte wird nicht gebaut.</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>Die 3D-Ansicht der Kamera baut auf der Map-Datei des Servers auf. Jetzt die passende Map suchen und einlesen? Damit kommen auch die zusätzlichen Monumente und Hot-Spots dazu. Die 3D-Karte wird nicht gebaut.</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Jetzt einlesen</value>
   </data>

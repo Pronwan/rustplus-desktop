@@ -3851,6 +3851,9 @@ Please pair this server first.</value>
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>Heatmaps are read from the server's map file. Search for the matching map now and parse it? This also adds the extra monuments and hot spots. The 3D map is not built.</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>The camera's 3D view is built on the server's map file. Search for the matching map now and parse it? This also adds the extra monuments and hot spots. The 3D map is not built.</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Parse now</value>
   </data>

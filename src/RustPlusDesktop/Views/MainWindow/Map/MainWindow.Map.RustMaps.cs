@@ -730,24 +730,46 @@ namespace RustPlusDesk.Views
         /// building the 3D map first. Same gates as the 3D flow, because it is the
         /// same work on the same local files.
         /// </summary>
-        private async Task<bool> OfferMapParseForHeatmapAsync(ServerProfile profile)
+        private Task<bool> OfferMapParseForHeatmapAsync(ServerProfile profile)
+            => OfferMapParseAsync(profile, "[Heatmap]",
+                Helpers.Loc.Text(
+                    "HeatmapParseMapPrompt",
+                    "Heatmaps are read from the server's map file. Search for the matching map now and parse it? "
+                    + "This also adds the extra monuments and hot spots. The 3D map is not built."));
+
+        /// <summary>
+        /// The same offer for a camera window's 3D view, which is built on the parsed map (terrain, monuments,
+        /// roads). True when the map is parsed afterwards.
+        /// </summary>
+        internal Task<bool> OfferMapParseForCameraAsync()
+        {
+            var profile = _vm.Selected;
+            if (profile == null) return Task.FromResult(false);
+            return OfferMapParseAsync(profile, "[Camera]",
+                Helpers.Loc.Text(
+                    "CameraParseMapPrompt",
+                    "The camera's 3D view is built on the server's map file. Search for the matching map now and parse it? "
+                    + "This also adds the extra monuments and hot spots. The 3D map is not built."));
+        }
+
+        private async Task<bool> OfferMapParseAsync(ServerProfile profile, string tag, string prompt)
         {
             if (_isMap3DPreparing)
             {
-                AppendLog("[Heatmap] A map build is already running.");
+                AppendLog($"{tag} A map build is already running.");
                 return false;
             }
 
             bool isPlaceholder = !string.IsNullOrEmpty(profile.LocalMapFilePath);
             if (!profile.IsFullConnected && !isPlaceholder)
             {
-                AppendLog("[Heatmap] Fully connect to a server or select an imported offline map first.");
+                AppendLog($"{tag} Fully connect to a server or select an imported offline map first.");
                 return false;
             }
 
             if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated)
             {
-                AppendLog("[Heatmap] Account or Discord login required before parsing the map file.");
+                AppendLog($"{tag} Account or Discord login required before parsing the map file.");
                 ShowMap3DAuthPopup();
                 return false;
             }
@@ -755,10 +777,7 @@ namespace RustPlusDesk.Views
             var ask = new Wpf.Ui.Controls.MessageBox
             {
                 Title = Helpers.Loc.Text("HeatmapParseMapTitle", "Parse map file?"),
-                Content = Helpers.Loc.Text(
-                    "HeatmapParseMapPrompt",
-                    "Heatmaps are read from the server's map file. Search for the matching map now and parse it? "
-                    + "This also adds the extra monuments and hot spots. The 3D map is not built."),
+                Content = prompt,
                 PrimaryButtonText = Helpers.Loc.Text("HeatmapParseMapConfirm", "Parse now"),
                 CloseButtonText = Helpers.Loc.Text("Cancel", "Cancel"),
                 Owner = this,
@@ -775,7 +794,7 @@ namespace RustPlusDesk.Views
                 var consent = new Map3DConsentWindow(this);
                 if (consent.ShowDialog() != true || !consent.Accepted)
                 {
-                    AppendLog("[Heatmap] Local map import canceled.");
+                    AppendLog($"{tag} Local map import canceled.");
                     return false;
                 }
 
@@ -789,21 +808,21 @@ namespace RustPlusDesk.Views
             UpdateRustMapsUi();
             try
             {
-                var result = await RunMapParserAsync(profile, isPlaceholder, "[Heatmap]");
+                var result = await RunMapParserAsync(profile, isPlaceholder, tag);
                 if (result == null || !result.ParserReady)
                 {
-                    AppendLog("[Heatmap] Map file could not be parsed.");
+                    AppendLog($"{tag} Map file could not be parsed.");
                     return false;
                 }
 
                 await LoadParsedMapDataAsync(result.FolderPath);
 
-                AppendLog($"[Heatmap] Map data ready, extra monuments and blocked zones loaded. Map file: {result.MapFilePath}");
+                AppendLog($"{tag} Map data ready, extra monuments and blocked zones loaded. Map file: {result.MapFilePath}");
                 return true;
             }
             catch (Exception ex)
             {
-                AppendLog($"[Heatmap] Parsing failed: {ex.Message}");
+                AppendLog($"{tag} Parsing failed: {ex.Message}");
                 return false;
             }
             finally

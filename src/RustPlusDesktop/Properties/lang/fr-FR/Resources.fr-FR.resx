@@ -7851,6 +7851,9 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>Les cartes de chaleur sont lues depuis le fichier de carte du serveur. Rechercher la carte correspondante et l&apos;analyser maintenant ? Cela ajoute egalement les monuments supplementaires et les points d&apos;interet. La carte 3D n&apos;est pas generee.</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>La vue 3D de la camera repose sur le fichier de carte du serveur. Rechercher la carte correspondante et l&apos;analyser maintenant ? Cela ajoute egalement les monuments supplementaires et les points d&apos;interet. La carte 3D n&apos;est pas generee.</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Analyser</value>
   </data>

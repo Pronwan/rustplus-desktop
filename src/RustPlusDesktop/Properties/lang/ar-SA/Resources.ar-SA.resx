@@ -7742,6 +7742,9 @@
   <data name="HeatmapParseMapPrompt" xml:space="preserve">
     <value>تُقرأ الخرائط الحرارية من ملف خريطة الخادم. هل تريد البحث عن الخريطة المطابقة وتحليلها الآن؟ سيضيف هذا أيضًا المعالم الإضافية والنقاط المهمة. لن يتم إنشاء الخريطة ثلاثية الأبعاد.</value>
   </data>
+  <data name="CameraParseMapPrompt" xml:space="preserve">
+    <value>يعتمد العرض ثلاثي الأبعاد للكاميرا على ملف خريطة الخادم. هل تريد البحث عن الخريطة المطابقة وتحليلها الآن؟ سيضيف هذا أيضًا المعالم الإضافية والنقاط المهمة. لن يتم إنشاء الخريطة ثلاثية الأبعاد.</value>
+  </data>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>حلّل الآن</value>
   </data>
