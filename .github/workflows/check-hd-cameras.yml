@@ -54,6 +54,17 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      # The pre-build obfuscates the app secrets from .env. This check only compiles: placeholders, no real secrets.
+      - name: Create a placeholder .env
+        shell: bash
+        run: |
+          printf '%s\n' \
+            "OVERLAY_SYNC_SECRET_HEX=$(printf '0%.0s' {1..64})" \
+            "OVERLAY_SYNC_BASEURL=https://example.invalid" \
+            "SUPABASE_URL=https://example.invalid" \
+            "SUPABASE_ANON_KEY=placeholder" \
+            "CLOUD_API_BASEURL=https://example.invalid" > .env
+
       - name: Build the app with the module
         shell: pwsh
         run: |
