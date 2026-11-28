@@ -7,7 +7,7 @@ name: Check HD camera module
 
 on:
   push:
-    branches: [feat/camera-module]
+    branches: [beta, master, feat/camera-module]
     paths:
       - vendor/HdCameras
       - .gitmodules
